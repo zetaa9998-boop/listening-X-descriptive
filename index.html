@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Listening – Descriptive Text</title>
+<style>
+:root{--bg:#f5f8ff;--ink:#141b34;--mut:#5c6584;--pri:#1e3a8a;--acc:#0d9488;--card:#fff;--line:#dbe3f5;--tint:#e7edfc;--ok:#15803d;--okbg:#d9f5e3;--bad:#b91c1c;--badbg:#fde2e2;--onpri:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1626;--ink:#eef1fb;--mut:#9aa4c7;--pri:#93b4ff;--acc:#5fd3c4;--card:#182238;--line:#2b3757;--tint:#1f2c4a;--ok:#5fd68c;--okbg:#12331f;--bad:#ff8f8f;--badbg:#3d1717;--onpri:#0f1626}}
+:root[data-theme="dark"]{--bg:#0f1626;--ink:#eef1fb;--mut:#9aa4c7;--pri:#93b4ff;--acc:#5fd3c4;--card:#182238;--line:#2b3757;--tint:#1f2c4a;--ok:#5fd68c;--okbg:#12331f;--bad:#ff8f8f;--badbg:#3d1717;--onpri:#0f1626}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.15rem;margin:0 0 4px;color:var(--pri)}
+.sub{color:var(--mut);margin:0 0 18px;font-size:.95rem}
+.stage{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:24px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px}
+button:hover{border-color:var(--pri)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+button.p{background:var(--pri);color:var(--onpri);border-color:var(--pri);font-weight:600}
+button:disabled{opacity:.5;cursor:default}
+.play{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--tint);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.play button{background:var(--pri);color:var(--onpri);border-color:var(--pri)}
+.play .spd{background:var(--card);color:var(--ink);border-color:var(--line);font-weight:400;padding:7px 12px}
+.play .spd.on{background:var(--acc);color:var(--onpri);border-color:var(--acc)}
+.tag{color:var(--mut);font-size:.9rem}
+.trk{height:6px;background:var(--line);border-radius:3px;margin:10px 0 18px;overflow:hidden}
+.trk i{display:block;height:100%;background:var(--acc)}
+.q{font-size:1.2rem;font-weight:700;line-height:1.35;margin:0 0 12px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:13px 15px}
+.opt.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.no{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.fb{margin:12px 0;padding:12px 15px;border-radius:12px;background:var(--tint)}
+.tx{background:var(--tint);border-radius:12px;padding:14px 16px;margin:12px 0}
+.score{font-size:3rem;font-weight:800;color:var(--pri);line-height:1}
+.rv{border-top:1.5px solid var(--line);padding:12px 0}
+.rv p{margin:3px 0}
+label{display:block;margin:12px 0 4px;font-weight:600}
+input[type=text]{font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:100%}
+.warn{background:var(--badbg);color:var(--bad);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>Listening – Descriptive Text</h1>
+<p class="sub">Dengarkan audio (text-to-speech bahasa Inggris bawaan browser), lalu jawab pertanyaannya. 30 soal, terbagi 5 bagian.</p>
+<div id="app"><div class="stage">Memuat…</div></div>
+</main>
+<script>
+var TTS_OK = "speechSynthesis" in window;
+var rate = 0.9;
+
+var L = [
+// PART 1 — sentence listening (8)
+{sec:"Bagian 1 · Kalimat", a:"To describe a particular person, place or thing.",
+ q:"What does this sentence explain?", o:["The generic structure of a descriptive text","The social function of a descriptive text","A language feature of a descriptive text"], c:1,
+ e:"Kalimat ini menjelaskan fungsi sosial descriptive text."},
+{sec:"Bagian 1 · Kalimat", a:"Identify the phenomenon to be described.",
+ q:"Which part of the generic structure is this?", o:["Identification","Description","Conclusion"], c:0,
+ e:"Bagian ini adalah Identification, memperkenalkan objek."},
+{sec:"Bagian 1 · Kalimat", a:"Provide details of the topic: parts, quantities or qualities, characteristics.",
+ q:"Which part of the generic structure is this?", o:["Identification","Description","Orientation"], c:1,
+ e:"Bagian ini adalah Description, merinci bagian dan ciri objek."},
+{sec:"Bagian 1 · Kalimat", a:"The soup tastes delicious.",
+ q:"Which word in the sentence is a linking verb?", o:["soup","tastes","delicious"], c:1,
+ e:"'Tastes' menghubungkan subjek 'soup' dengan pelengkap 'delicious'."},
+{sec:"Bagian 1 · Kalimat", a:"Borobudur is one of the tallest temples in the world.",
+ q:"Which phrase is the classifier in this sentence?", o:["Borobudur","one of the","tallest temples"], c:1,
+ e:"'One of the' adalah classifier yang menunjukkan jumlah/kedudukan."},
+{sec:"Bagian 1 · Kalimat", a:"The temple looks magnificent.",
+ q:"What is the function of the word 'looks' here?", o:["Action verb","Linking verb","Modal verb"], c:1,
+ e:"'Looks' berfungsi sebagai linking verb."},
+{sec:"Bagian 1 · Kalimat", a:"Eight step-like stone terraces.",
+ q:"Which word is the classifier here?", o:["Eight","step-like","terraces"], c:0,
+ e:"'Eight' adalah kata bilangan yang mengklasifikasikan jumlah terraces."},
+{sec:"Bagian 1 · Kalimat", a:"A descriptive text mostly uses simple present tense.",
+ q:"According to the sentence, which tense is mostly used?", o:["Simple past tense","Simple present tense","Future tense"], c:1,
+ e:"Descriptive text umumnya memakai simple present tense."},
+
+// PART 2 — My Best Friend (6)
+{sec:"Bagian 2 · My Best Friend", a:"Rina is my best friend. She is a tall girl with curly black hair and bright brown eyes. She always wears a friendly smile. Rina is kind, patient, and very generous. She loves reading novels and playing badminton every weekend.",
+ q:"What is the name of the writer's best friend?", o:["Rina","Rani","Dina"], c:0, e:"Nama temannya adalah Rina."},
+{sec:"Bagian 2 · My Best Friend", a:null,
+ q:"What color is Rina's hair?", o:["Brown","Black","Blonde"], c:1, e:"'Curly black hair' — rambutnya hitam."},
+{sec:"Bagian 2 · My Best Friend", a:null,
+ q:"What color are Rina's eyes?", o:["Blue","Brown","Green"], c:1, e:"'Bright brown eyes' — matanya cokelat."},
+{sec:"Bagian 2 · My Best Friend", a:null,
+ q:"How is Rina's body build described?", o:["Short","Tall","Thin"], c:1, e:"Teks menyebut 'a tall girl'."},
+{sec:"Bagian 2 · My Best Friend", a:null,
+ q:"Which is NOT mentioned as one of Rina's personalities?", o:["Kind","Lazy","Generous"], c:1, e:"Yang disebut: kind, patient, generous — bukan lazy."},
+{sec:"Bagian 2 · My Best Friend", a:null,
+ q:"What does Rina like to do on weekends?", o:["Reading novels and playing badminton","Watching movies","Cooking"], c:0, e:"Teks: 'reading novels and playing badminton every weekend'."},
+
+// PART 3 — Komodo Dragon (6)
+{sec:"Bagian 3 · Komodo Dragon", a:"The Komodo dragon is the largest living lizard in the world. It lives on a few islands in Indonesia, including Komodo Island. This reptile can grow up to three meters long and weigh more than seventy kilograms. Its skin is rough and grayish brown. The Komodo dragon is a powerful predator with sharp teeth and a strong sense of smell.",
+ q:"What kind of animal is the Komodo dragon?", o:["The largest living lizard","A type of snake","A small reptile"], c:0, e:"Teks menyebut 'the largest living lizard in the world'."},
+{sec:"Bagian 3 · Komodo Dragon", a:null,
+ q:"Where does the Komodo dragon live?", o:["In Africa","On a few islands in Indonesia","In Australia"], c:1, e:"Ia hidup di beberapa pulau di Indonesia, termasuk Pulau Komodo."},
+{sec:"Bagian 3 · Komodo Dragon", a:null,
+ q:"How long can it grow?", o:["Up to three meters","Up to one meter","Up to ten meters"], c:0, e:"Teks: 'can grow up to three meters long'."},
+{sec:"Bagian 3 · Komodo Dragon", a:null,
+ q:"How much can it weigh?", o:["More than seventy kilograms","Less than ten kilograms","About one kilogram"], c:0, e:"Teks: 'weigh more than seventy kilograms'."},
+{sec:"Bagian 3 · Komodo Dragon", a:null,
+ q:"What does its skin look like?", o:["Bright green and smooth","Rough and grayish brown","Smooth and white"], c:1, e:"Teks: 'its skin is rough and grayish brown'."},
+{sec:"Bagian 3 · Komodo Dragon", a:null,
+ q:"What kind of predator is it described as?", o:["A weak predator","A powerful predator","A harmless animal"], c:1, e:"Teks: 'a powerful predator with sharp teeth'."},
+
+// PART 4 — Mount Bromo (6)
+{sec:"Bagian 4 · Mount Bromo", a:"Mount Bromo is an active volcano located in East Java, Indonesia. It stands within the Tengger massif and is surrounded by a vast sea of sand. The mountain is famous for its stunning sunrise view. Every year, thousands of tourists climb its slope to watch the sun rise above the misty landscape.",
+ q:"What type of mountain is Bromo?", o:["An active volcano","An extinct volcano","A hill"], c:0, e:"Teks: 'Mount Bromo is an active volcano'."},
+{sec:"Bagian 4 · Mount Bromo", a:null,
+ q:"Where is Mount Bromo located?", o:["West Java","East Java","Central Java"], c:1, e:"Teks: 'located in East Java, Indonesia'."},
+{sec:"Bagian 4 · Mount Bromo", a:null,
+ q:"What surrounds Mount Bromo?", o:["A vast sea of sand","A dense forest","A large lake"], c:0, e:"Teks: 'surrounded by a vast sea of sand'."},
+{sec:"Bagian 4 · Mount Bromo", a:null,
+ q:"What is Mount Bromo famous for?", o:["Its stunning sunrise view","Its waterfall","Its coral reef"], c:0, e:"Teks: 'famous for its stunning sunrise view'."},
+{sec:"Bagian 4 · Mount Bromo", a:null,
+ q:"What do tourists do there every year?", o:["Climb its slope to watch the sunrise","Swim in the crater","Camp at the base only"], c:0, e:"Teks: 'climb its slope to watch the sun rise'."},
+{sec:"Bagian 4 · Mount Bromo", a:null,
+ q:"Within which massif does Mount Bromo stand?", o:["Tengger massif","Merapi massif","Rinjani massif"], c:0, e:"Teks: 'stands within the Tengger massif'."},
+
+// PART 5 — Borobudur (4)
+{sec:"Bagian 5 · Borobudur Temple", a:"Borobudur is a Hindu–Buddhist temple. It was built in the ninth century under the Sailendra dynasty.",
+ q:"When was Borobudur built?", o:["In the ninth century","In the nineteenth century","In the twentieth century"], c:0, e:"Teks: 'built in the ninth century'."},
+{sec:"Bagian 5 · Borobudur Temple", a:"Borobudur is located in Magelang, Central Java, Indonesia.",
+ q:"Where is Borobudur located?", o:["Magelang, Central Java","Yogyakarta City","Bandung, West Java"], c:0, e:"Teks: 'located in Magelang, Central Java, Indonesia'."},
+{sec:"Bagian 5 · Borobudur Temple", a:"The temple is constructed on a hill 46 meters high and consists of eight step-like stone terraces.",
+ q:"How high is the hill?", o:["36 meters","46 meters","64 meters"], c:1, e:"Teks: 'a hill 46 m high'."},
+{sec:"Bagian 5 · Borobudur Temple", a:"Borobudur Temple, which was rededicated as an Indonesian monument in nineteen eighty-three, is a valuable treasure for Indonesian people.",
+ q:"In what year was Borobudur rededicated as a monument?", o:["1973","1983","1993"], c:1, e:"Teks: 'rededicated as an Indonesian monument in 1983'."}
+];
+
+var $=function(id){return document.getElementById(id)};
+function E(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+var st={nm:"",kl:"",n:0,sc:0,bad:[],started:false};
+var curAudio=null,speaking=false;
+
+function speak(text,btn){
+  if(!TTS_OK) return;
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=rate;
+  speaking=true; if(btn){btn.disabled=true;btn.textContent="🔊 Memutar…"}
+  u.onend=u.onerror=function(){speaking=false; if(btn){btn.disabled=false;btn.textContent="🔊 Putar lagi"}};
+  window.speechSynthesis.speak(u);
+}
+
+function intro(){
+  var h="<div class='stage'><h2 style='margin-top:0;color:var(--pri)'>Listening 30 soal</h2><p>Materi: kalimat singkat, teks tentang teman, Komodo dragon, Gunung Bromo, dan Candi Borobudur. Kamu boleh memutar audio berkali-kali.</p>";
+  if(!TTS_OK) h+="<div class='warn'>Browser ini belum mendukung text-to-speech. Coba buka di Chrome, Edge, atau Safari versi terbaru.</div>";
+  h+="<label for='nm'>Nama</label><input type='text' id='nm'><label for='kl'>Kelas</label><input type='text' id='kl'><p><button class='p' id='st'>Mulai listening</button></p></div>";
+  $("app").innerHTML=h;
+  $("st").onclick=function(){st.nm=$("nm").value.trim();st.kl=$("kl").value.trim();st.n=0;st.sc=0;st.bad=[];st.started=true;render()};
+}
+
+function audioFor(n){
+  var item=L[n];
+  if(item.a) return item.a;
+  for(var k=n-1;k>=0;k--){ if(L[k].sec!==item.sec) break; if(L[k].a) return L[k].a; }
+  return null;
+}
+
+function render(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  var item=L[st.n];
+  var text=audioFor(st.n);
+  var pct=st.n/L.length*100;
+  var h="<div class='stage'>";
+  h+="<div class='tag'>"+E(item.sec)+" · Soal "+(st.n+1)+" dari "+L.length+" · Skor "+st.sc+"</div>";
+  h+="<div class='trk'><i style='width:"+pct+"%'></i></div>";
+  if(text){
+    h+="<div class='play'><button id='pl'>"+(TTS_OK?"🔊 Dengarkan":"Audio tidak tersedia")+"</button>";
+    h+="<button class='spd' id='s1' data-r='1'>1x</button><button class='spd' id='s2' data-r='0.8'>0.8x</button>";
+    h+="<span class='tag'>Boleh diputar berkali-kali</span></div>";
+  }
+  h+="<p class='q'>"+E(item.q)+"</p>";
+  item.o.forEach(function(o,j){h+="<button class='opt' data-j='"+j+"'><b>"+"ABC".charAt(j)+".</b> "+E(o)+"</button>"});
+  h+="<div id='fb'></div></div>";
+  $("app").innerHTML=h;
+
+  var playBtn=$("pl");
+  function doSpeak(){ if(text && TTS_OK) speak(text, playBtn) }
+  if(playBtn){ playBtn.onclick=doSpeak;
+    $("s1").onclick=function(){rate=1;setSpd()}; $("s2").onclick=function(){rate=0.8;setSpd()};
+    setSpd();
+  }
+  function setSpd(){ $("s1").className="spd"+(rate===1?" on":""); $("s2").className="spd"+(rate===0.8?" on":""); }
+
+  var bs=document.querySelectorAll(".opt");
+  bs.forEach(function(b){b.onclick=function(){pick(+b.getAttribute("data-j"),bs)}});
+}
+
+function pick(j,bs){
+  var item=L[st.n],r=j===item.c;
+  if(r) st.sc++; else st.bad.push(st.n);
+  bs.forEach(function(b,x){b.disabled=true;if(x===item.c)b.className="opt ok";else if(x===j)b.className="opt no"});
+  var last=st.n===L.length-1;
+  var atext=audioFor(st.n);
+  var transcript = atext ? "<div class='tx'><b>Transkrip:</b> "+E(atext)+"</div>" : "";
+  $("fb").innerHTML="<div class='fb'><b>"+(r?"Benar.":"Belum tepat.")+"</b> "+E(item.e)+"</div>"+transcript+"<button class='p' id='nq'>"+(last?"Lihat hasil":"Soal berikutnya")+"</button>";
+  $("nq").focus();
+  $("nq").onclick=function(){st.n++; last?result():render()};
+}
+
+function result(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  var p=Math.round(st.sc/L.length*100);
+  var m=p>=80?"Sangat baik. Kemampuan listening-mu untuk descriptive text sudah kuat.":p>=60?"Cukup baik. Coba dengarkan ulang bagian yang masih salah.":"Ayo dengarkan lagi teksnya pelan-pelan, lalu coba sekali lagi.";
+  var h="<div class='stage'><h2 style='margin-top:0;color:var(--pri)'>Hasil listening</h2>";
+  if(st.nm||st.kl) h+="<p><b>"+E(st.nm)+"</b>"+(st.nm&&st.kl?" · ":"")+E(st.kl)+"</p>";
+  h+="<div class='score'>"+st.sc+" / "+L.length+"</div><p>Nilai "+p+". "+m+"</p>";
+  h+="<div class='play'><button class='p' id='rq'>Ulangi dari awal</button><button id='rm' class='spd'>Isi ulang nama/kelas</button></div>";
+  if(st.bad.length){
+    h+="<h3 style='color:var(--pri)'>Soal yang perlu diulang</h3>";
+    st.bad.forEach(function(k){var it=L[k];h+="<div class='rv'><p><b>"+E(it.q)+"</b></p><p>Jawaban benar: "+E(it.o[it.c])+"</p><p class='tag'>"+E(it.e)+"</p></div>"});
+  }
+  h+="</div>";
+  $("app").innerHTML=h;
+  $("rq").onclick=function(){st.n=0;st.sc=0;st.bad=[];render()};
+  $("rm").onclick=intro;
+}
+
+if(TTS_OK && window.speechSynthesis.getVoices().length===0){
+  window.speechSynthesis.onvoiceschanged=function(){};
+}
+intro();
+</script>
+</body>
+</html>
